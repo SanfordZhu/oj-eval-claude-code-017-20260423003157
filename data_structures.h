@@ -145,18 +145,14 @@ struct StationIndexArray {
 struct TrainSeats {
     int trainIdx;
     int date; // days from June 1
-    int seats[MAX_STATIONS_PER_TRAIN - 1]; // seats available between station i and i+1
+    int* seats; // seats available between stations (stationNum - 1 entries)
 
-    TrainSeats() : trainIdx(-1), date(-1) {
-        for (int i = 0; i < MAX_STATIONS_PER_TRAIN - 1; i++) {
-            seats[i] = 0;
-        }
-    }
+    TrainSeats() : trainIdx(-1), date(-1), seats(nullptr) {}
 };
 
-// Array for train seats
+// Simple array for train seats
 struct TrainSeatsArray {
-    TrainSeats seatsData[MAX_TRAINS * 100]; // Up to 100 days per train
+    TrainSeats seatsData[10000]; // Max 10000 train-date combinations
     int count;
 
     TrainSeatsArray() : count(0) {}

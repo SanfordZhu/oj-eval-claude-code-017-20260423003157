@@ -803,23 +803,26 @@ int* getTrainSeats(int trainIdx, int date) {
     }
 
     // Create new seats entry
-    if (trainSeatsArray.count < MAX_TRAINS * 100) {
-        TrainSeats& seats = trainSeatsArray.seatsData[trainSeatsArray.count];
-        seats.trainIdx = trainIdx;
-        seats.date = date;
-
-        Train* train = trainTable.trains[trainIdx];
-        if (train) {
-            for (int i = 0; i < train->stationNum - 1; i++) {
-                seats.seats[i] = train->seatNum;
-            }
-        }
-
-        trainSeatsArray.count++;
-        return seats.seats;
+    if (trainSeatsArray.count >= 10000) {
+        return nullptr;
     }
 
-    return nullptr;
+    Train* train = trainTable.trains[trainIdx];
+    if (!train) {
+        return nullptr;
+    }
+
+    TrainSeats& newSeats = trainSeatsArray.seatsData[trainSeatsArray.count];
+    newSeats.trainIdx = trainIdx;
+    newSeats.date = date;
+    newSeats.seats = new int[train->stationNum - 1];
+
+    for (int i = 0; i < train->stationNum - 1; i++) {
+        newSeats.seats[i] = train->seatNum;
+    }
+
+    trainSeatsArray.count++;
+    return newSeats.seats;
 }
 
 int handleBuyTicket(const Command& cmd) {
@@ -1085,7 +1088,16 @@ int handleClean() {
 
     orderArray.orderCount = 0;
     stationIndex.count = 0;
+
+    // Clear train seats
+    for (int i = 0; i < trainSeatsArray.count; i++) {
+        if (trainSeatsArray.seatsData[i].seats) {
+            delete[] trainSeatsArray.seatsData[i].seats;
+            trainSeatsArray.seatsData[i].seats = nullptr;
+        }
+    }
     trainSeatsArray.count = 0;
+
     currentTimestamp = 0;
     firstUserCreated = false;
 
