@@ -5,7 +5,7 @@
 
 const int MAX_USERS = 100000;
 const int MAX_TRAINS = 10000;
-const int MAX_ORDERS = 200000;
+const int MAX_ORDERS = 50000;
 const int MAX_STATIONS_PER_TRAIN = 100;
 const int MAX_STATION_NAME_LEN = 31; // 10 Chinese characters * 3 bytes + 1 for null terminator
 const int MAX_USERNAME_LEN = 21;
@@ -122,24 +122,8 @@ struct OrderArray {
     OrderArray() : orderCount(0) {}
 };
 
-// Structure for station index
-struct StationIndex {
-    char stationName[MAX_STATION_NAME_LEN];
-    int trainIndex;
-    int stationIdx; // Index within the train
-
-    StationIndex() : trainIndex(-1), stationIdx(-1) {
-        stationName[0] = '\0';
-    }
-};
-
-// Array for station indexing
-struct StationIndexArray {
-    StationIndex indices[MAX_TRAINS * MAX_STATIONS_PER_TRAIN];
-    int count;
-
-    StationIndexArray() : count(0) {}
-};
+// Structure for station index (not used - removed to save memory)
+// We'll use linear search instead
 
 // Seat data for a train on a specific date
 struct TrainSeats {

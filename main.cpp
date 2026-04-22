@@ -25,7 +25,6 @@ void bubbleSort(T* arr, int n, bool (*compare)(const T&, const T&)) {
 UserHashTable userTable;
 TrainHashTable trainTable;
 OrderArray orderArray;
-StationIndexArray stationIndex;
 TrainSeatsArray trainSeatsArray;
 int currentTimestamp = 0;
 bool firstUserCreated = false;
@@ -103,18 +102,6 @@ bool addTrain(Train* train) {
         if (trainTable.trains[idx] == nullptr) {
             trainTable.trains[idx] = train;
             trainTable.trainCount++;
-
-            // Add to station index
-            for (int j = 0; j < train->stationNum; j++) {
-                if (stationIndex.count < MAX_TRAINS * MAX_STATIONS_PER_TRAIN) {
-                    strncpy(stationIndex.indices[stationIndex.count].stationName,
-                           train->stations[j].name, MAX_STATION_NAME_LEN - 1);
-                    stationIndex.indices[stationIndex.count].trainIndex = idx;
-                    stationIndex.indices[stationIndex.count].stationIdx = j;
-                    stationIndex.count++;
-                }
-            }
-
             return true;
         }
         if (strcmp(trainTable.trains[idx]->trainID, train->trainID) == 0) {
@@ -660,7 +647,7 @@ struct TicketResult {
     int trainIdx;
 };
 
-const int MAX_RESULTS = 10000;
+const int MAX_RESULTS = 1000;
 TicketResult ticketResults[MAX_RESULTS];
 int resultCount = 0;
 
@@ -1087,7 +1074,6 @@ int handleClean() {
     trainTable.trainCount = 0;
 
     orderArray.orderCount = 0;
-    stationIndex.count = 0;
 
     // Clear train seats
     for (int i = 0; i < trainSeatsArray.count; i++) {
