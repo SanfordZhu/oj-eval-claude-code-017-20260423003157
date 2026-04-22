@@ -1,0 +1,10 @@
+add_user -c admin -u user1 -p password -n 张三 -m test@test.com -g 10
+login -u user1 -p password
+query_profile -c user1 -u user1
+add_train -i HAPPY_TRAIN -n 3 -m 1000 -s 上院|中院|下院 -p 114|514 -x 19:19 -t 600|600 -o 5 -d 06-01|08-17 -y G
+release_train -i HAPPY_TRAIN
+query_train -i HAPPY_TRAIN -d 07-01
+query_ticket -s 中院 -t 下院 -d 08-17
+buy_ticket -u user1 -i HAPPY_TRAIN -d 08-17 -n 2 -f 中院 -t 下院
+query_order -u user1
+exit
